@@ -1,0 +1,69 @@
+# 题目
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.  
+An input string is valid if:  
+Open brackets must be closed by the same type of brackets.  
+Open brackets must be closed in the correct order.  
+Note that an empty string is also considered valid.  
+
+- Example 1:
+> Input: "()"  
+> Output: true  
+- Example 2:
+> Input: "()[]{}"  
+> Output: true  
+- Example 3:
+> Input: "(]"  
+> Output: false  
+- Example 4:
+> Input: "([)]"  
+> Output: false  
+- Example 5:
+> Input: "{[]}"  
+> Output: true  
+***
+用堆栈实现，正括号表示入栈，反括号表示出栈  
+先对string遍历，元素是正括号就将该元素压栈，是反括号则堆栈删除一个元素  
+遍历完成后，如果堆栈空，则表示全部配对  
+（有一个例外是第一个输入就是反括号）  
+## C++
+```C++
+#include <vector>
+using std::vector;
+class Solution {
+public:
+    bool match(char value,char key){
+        bool res=0;
+        if(key==')'&&value=='('||key=='}'&&value=='{'||key==']'&&value=='[')
+            res=1;
+        return res;
+    }
+    bool isValid(string s) {
+        string tmp;
+        bool res=1;
+        char value;
+        for(auto i:s){
+            if(i=='('||i=='{'||i=='[')
+                tmp.push_back(i);
+            else if(i==')'||i=='}'||i==']')
+                if(!tmp.empty()){
+                    value=tmp.back();
+                    //若匹配成功，则弹出末尾元素
+                    if(match(value,i))
+                        tmp.pop_back();
+                    else break;
+                }
+                else{
+                    //此时第一个输入就是反括号，一定无法配对，所以将其压栈
+                    //最后判断时这种情况就返回false
+                    tmp.push_back(i);
+                    break;
+                }//如果第一个就是反括号
+        }
+        //若字符串为空，返回1,其中包括处理完成后空了，或者一开始就空了
+        if(tmp.empty()) res=1;
+        //处理完成后还不为空，说明输入中有未配对的括号
+        else res=0;
+        return res;
+    }
+};
+```
