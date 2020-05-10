@@ -1,0 +1,20 @@
+##C++（递归）
+```C++
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(!root) return nullptr;
+        if(root==p||root==q) return root;
+        //对左右子树递归
+        TreeNode* left = lowestCommonAncestor(root->left,p,q);
+        TreeNode* right = lowestCommonAncestor(root->right,p,q);
+        //如果左子树中找不到p或q，返回右子树中找到的，反之同理
+        //这种情况包括了左右子树都找不到，返回0
+        if(!left) return right;
+        if(!right) return left;
+        //这种情况说明，p和q分别在左右子树，所以返回root
+        if(left&&right) return root;
+        return nullptr;//必须有返回值
+    }
+};
+```
